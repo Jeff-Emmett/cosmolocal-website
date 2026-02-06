@@ -1,0 +1,15 @@
+services:
+  cosmolocal-website:
+    build: .
+    container_name: cosmolocal-website
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cosmolocal.rule=Host(`cosmolocal.world`) || Host(`www.cosmolocal.world`)"
+      - "traefik.http.services.cosmolocal.loadbalancer.server.port=3000"
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
