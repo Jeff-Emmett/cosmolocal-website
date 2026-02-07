@@ -15,6 +15,62 @@ services:
     networks:
       - traefik-public
 
+  n8n-cosmolocal:
+    image: n8nio/n8n:latest
+    container_name: n8n-cosmolocal
+    restart: unless-stopped
+    environment:
+      - N8N_HOST=automate.cosmolocal.world
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://automate.cosmolocal.world/
+      - GENERIC_TIMEZONE=Europe/Brussels
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=n8n-cosmolocal-db
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD:-***REDACTED_DB_PASS***}
+    volumes:
+      - n8n-cosmolocal-data:/home/node/.n8n
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n-cosmolocal.rule=Host(`automate.cosmolocal.world`)"
+      - "traefik.http.routers.n8n-cosmolocal.entrypoints=web"
+      - "traefik.http.services.n8n-cosmolocal.loadbalancer.server.port=5678"
+      - "traefik.http.routers.n8n-cosmolocal-secure.rule=Host(`automate.cosmolocal.world`)"
+      - "traefik.http.routers.n8n-cosmolocal-secure.entrypoints=websecure"
+      - "traefik.http.routers.n8n-cosmolocal-secure.tls=true"
+      - "traefik.http.routers.n8n-cosmolocal-secure.service=n8n-cosmolocal"
+    depends_on:
+      n8n-cosmolocal-db:
+        condition: service_healthy
+    networks:
+      - traefik-public
+      - cosmolocal-internal
+
+  n8n-cosmolocal-db:
+    image: postgres:16-alpine
+    container_name: n8n-cosmolocal-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=n8n
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=${N8N_DB_PASSWORD:-***REDACTED_DB_PASS***}
+    volumes:
+      - n8n-cosmolocal-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cosmolocal-internal
+
+volumes:
+  n8n-cosmolocal-data:
+  n8n-cosmolocal-db:
+
 networks:
   traefik-public:
     external: true
+  cosmolocal-internal:
