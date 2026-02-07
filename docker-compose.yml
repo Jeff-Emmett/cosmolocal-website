@@ -6,7 +6,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cosmolocal.rule=Host(`cosmolocal.world`) || Host(`www.cosmolocal.world`)"
+      - "traefik.http.routers.cosmolocal.entrypoints=web"
       - "traefik.http.services.cosmolocal.loadbalancer.server.port=3000"
+      - "traefik.http.routers.cosmolocal-secure.rule=Host(`cosmolocal.world`) || Host(`www.cosmolocal.world`)"
+      - "traefik.http.routers.cosmolocal-secure.entrypoints=websecure"
+      - "traefik.http.routers.cosmolocal-secure.tls=true"
+      - "traefik.http.routers.cosmolocal-secure.service=cosmolocal"
     networks:
       - traefik-public
 
