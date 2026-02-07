@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Cosmolocal Foundation",
   description:
-    "Bridging cosmic perspective with local action. The Cosmolocal Foundation supports projects at the intersection of global coordination and community resilience.",
+    "The Cosmolocal Foundation empowers communities to build localized, regenerative economies connected through global knowledge-sharing, commons-based collaboration, and decentralized governance.",
   openGraph: {
     title: "Cosmolocal Foundation",
     description:
-      "Bridging cosmic perspective with local action.",
+      "What is heavy should be local, and what is light should be global and shared.",
     url: "https://cosmolocal.world",
     siteName: "Cosmolocal Foundation",
     type: "website",
