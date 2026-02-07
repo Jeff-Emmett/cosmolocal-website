@@ -4,12 +4,14 @@ Import these JSON files into [automate.cosmolocal.world](https://automate.cosmol
 
 ## Setup Requirements
 
-Before activating workflows, configure these environment variables in n8n (**Settings > Variables**):
+API keys are passed as **Docker environment variables** in `docker-compose.yml` (n8n community edition doesn't support Settings > Variables). The workflows access them via `$env.VARIABLE_NAME`.
 
 | Variable | Description | Where to find |
 |----------|-------------|---------------|
 | `TWENTY_API_KEY` | Twenty CRM API key | crm.cosmolocal.world > Settings > API Keys |
-| `RESEND_API_KEY` | Resend email API key | `ssh netcup "cat ~/.resend_credentials"` |
+| `RESEND_API_KEY` | Resend email API key | Already set (or `ssh netcup "cat ~/.resend_credentials"`) |
+
+To update keys, edit the `environment:` section of the `n8n-cosmolocal` service in `docker-compose.yml` and redeploy.
 
 The Listmonk credentials are hardcoded for internal Docker network access (no external exposure).
 
