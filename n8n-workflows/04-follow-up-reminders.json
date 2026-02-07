@@ -1,0 +1,237 @@
+{
+  "name": "Follow-up Reminders — Stale Contacts",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0,
+              "triggerAtDay": 1
+            }
+          ]
+        }
+      },
+      "id": "weekly-schedule",
+      "name": "Weekly Check (Monday 9 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://crm.cosmolocal.world/api/v1/objects/people",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.TWENTY_API_KEY }}"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limit",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fetch-all-contacts",
+      "name": "Fetch All Contacts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data.people",
+        "options": {}
+      },
+      "id": "split-contacts",
+      "name": "Split Into Items",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst staleItems = [];\nconst now = new Date();\nconst STALE_DAYS = 14;\n\nfor (const item of items) {\n  const updatedAt = new Date(item.json.updatedAt);\n  const daysSinceUpdate = Math.floor((now - updatedAt) / (1000 * 60 * 60 * 24));\n  \n  if (daysSinceUpdate >= STALE_DAYS) {\n    staleItems.push({\n      json: {\n        ...item.json,\n        daysSinceUpdate,\n        email: item.json.emails?.primaryEmail || 'N/A',\n        fullName: `${item.json.name?.firstName || ''} ${item.json.name?.lastName || ''}`.trim() || 'Unknown'\n      }\n    });\n  }\n}\n\nreturn staleItems.length > 0 ? staleItems : [{ json: { noStaleContacts: true } }];"
+      },
+      "id": "filter-stale",
+      "name": "Filter Stale Contacts (14+ days)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-stale",
+              "leftValue": "={{ $json.noStaleContacts }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-has-stale",
+      "name": "Any Stale Contacts?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst contactList = items.map(item => \n  `- **${item.json.fullName}** (${item.json.email}) — ${item.json.daysSinceUpdate} days since last update`\n).join('\\n');\n\nconst count = items.length;\n\nreturn [{\n  json: {\n    subject: `[Cosmolocal CRM] ${count} contact${count !== 1 ? 's' : ''} need${count === 1 ? 's' : ''} follow-up`,\n    htmlBody: `<h2>Stale Contact Report</h2><p>The following ${count} contact${count !== 1 ? 's have' : ' has'} not been updated in 14+ days:</p><table style=\"border-collapse:collapse;width:100%\"><tr style=\"background:#f5f5f4\"><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Name</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Email</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Days Stale</th></tr>${items.map(i => `<tr><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.fullName}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.email}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.daysSinceUpdate}</td></tr>`).join('')}</table><p style=\"margin-top:16px\"><a href=\"https://crm.cosmolocal.world\">Open CRM</a> to follow up.</p><p style=\"color:#78716c;font-size:12px\">Automated by n8n — automate.cosmolocal.world</p>`,\n    count\n  }\n}];"
+      },
+      "id": "build-report",
+      "name": "Build Report Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 240]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"CRM Bot <automate@cosmolocal.world>\",\n  \"to\": [\"***REDACTED_EMAIL***\"],\n  \"subject\": \"{{ $json.subject }}\",\n  \"html\": \"{{ $json.htmlBody }}\"\n}",
+        "options": {}
+      },
+      "id": "send-reminder-email",
+      "name": "Send Reminder to Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 240]
+    },
+    {
+      "parameters": {},
+      "id": "no-stale-contacts",
+      "name": "No Stale Contacts — Done",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1340, 420]
+    }
+  ],
+  "connections": {
+    "Weekly Check (Monday 9 AM)": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Contacts": {
+      "main": [
+        [
+          {
+            "node": "Split Into Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Items": {
+      "main": [
+        [
+          {
+            "node": "Filter Stale Contacts (14+ days)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Stale Contacts (14+ days)": {
+      "main": [
+        [
+          {
+            "node": "Any Stale Contacts?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any Stale Contacts?": {
+      "main": [
+        [
+          {
+            "node": "Build Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Stale Contacts — Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Report Email": {
+      "main": [
+        [
+          {
+            "node": "Send Reminder to Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "cosmolocal"
+    },
+    {
+      "name": "crm"
+    }
+  ],
+  "pinData": {}
+}

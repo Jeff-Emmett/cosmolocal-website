@@ -1,0 +1,278 @@
+{
+  "name": "Lead Nurturing — Welcome Email Sequence",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-contact-created",
+        "options": {}
+      },
+      "id": "webhook-new-contact",
+      "name": "Webhook — New Contact Created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "new-contact-created"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-email",
+              "name": "email",
+              "value": "={{ $json.body.email || $json.body.emails?.primaryEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "set-first-name",
+              "name": "firstName",
+              "value": "={{ $json.body.firstName || $json.body.name?.firstName || 'there' }}",
+              "type": "string"
+            },
+            {
+              "id": "set-contact-id",
+              "name": "contactId",
+              "value": "={{ $json.body.id || $json.body.contactId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-fields",
+      "name": "Extract Contact Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Cosmolocal Foundation <***REDACTED_EMAIL***>\",\n  \"to\": [\"{{ $json.email }}\"],\n  \"subject\": \"Welcome to the Cosmolocal Foundation\",\n  \"html\": \"<h2>Welcome, {{ $json.firstName }}!</h2><p>Thank you for connecting with the Cosmolocal Foundation. We're building a world where local communities thrive within regenerative economies, connected through global knowledge-sharing and commons-based collaboration.</p><p><strong>\\\"What is heavy should be local, and what is light should be global and shared.\\\"</strong></p><p>Here's what we're working on:</p><ul><li><strong>Decentralized Governance</strong> — Transparent, community-led decision-making</li><li><strong>Open Knowledge Commons</strong> — Sharing sustainable production methods globally</li><li><strong>Commons-Compatible Capital</strong> — Financing transformative local projects</li><li><strong>Cosmolocal Coordination</strong> — Connecting local efforts into a global network</li></ul><p>We'll be in touch with updates on our progress and opportunities to get involved.</p><p>Warm regards,<br/>The Cosmolocal Foundation Team</p><p style='color:#78716c;font-size:12px;'>cosmolocal.world</p>\"\n}",
+        "options": {}
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email (Day 0)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "days"
+      },
+      "id": "wait-3-days",
+      "name": "Wait 3 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Cosmolocal Foundation <***REDACTED_EMAIL***>\",\n  \"to\": [\"{{ $('Extract Contact Fields').item.json.email }}\"],\n  \"subject\": \"Our Strategic Priorities — How We're Building Change\",\n  \"html\": \"<h2>Hi {{ $('Extract Contact Fields').item.json.firstName }},</h2><p>We wanted to share more about our strategic approach to systemic transformation.</p><p>The Cosmolocal Foundation is executing on eight key initiatives:</p><ol><li><strong>Mapping Regenerative Communities</strong> — Cataloging eco-villages, circular economy hubs, and governance initiatives worldwide</li><li><strong>Web3 Funding</strong> — Quadratic funding, DAOs, and Collaborative Finance for local projects</li><li><strong>Open Resources</strong> — A global knowledge commons of governance models and production blueprints</li><li><strong>Education & Advocacy</strong> — Engaging policymakers to scale cosmolocal principles</li><li><strong>Pilots & Grants</strong> — Funding projects that demonstrate scalable solutions</li><li><strong>Cosmolocal Certification</strong> — Blockchain-verified standards for cosmolocal initiatives</li><li><strong>Global Alliances</strong> — Bioregional collaboration on governance and mutual aid</li><li><strong>Impact Research</strong> — Evidence-based scaling through the Cosmolocal Research Institute</li></ol><p>Want to learn more or get involved? Reply to this email — we'd love to hear from you.</p><p>Best,<br/>The Cosmolocal Foundation Team</p>\"\n}",
+        "options": {}
+      },
+      "id": "send-followup-email",
+      "name": "Send Follow-up Email (Day 3)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      },
+      "id": "wait-7-days",
+      "name": "Wait 7 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Cosmolocal Foundation <***REDACTED_EMAIL***>\",\n  \"to\": [\"{{ $('Extract Contact Fields').item.json.email }}\"],\n  \"subject\": \"Join the Movement — Ways to Participate\",\n  \"html\": \"<h2>Hi {{ $('Extract Contact Fields').item.json.firstName }},</h2><p>We believe in the power of collaboration. Here are ways you can participate in the cosmolocal movement:</p><ul><li><strong>Subscribe to our newsletter</strong> — Stay updated on projects, pilots, and governance experiments</li><li><strong>Join a working group</strong> — Contribute your expertise to research, technology, or community building</li><li><strong>Support a pilot project</strong> — Help fund or participate in cosmolocal demonstrations</li><li><strong>Spread the word</strong> — Share our vision with your network</li></ul><p>Visit <a href='https://cosmolocal.world'>cosmolocal.world</a> to explore our work, or simply reply to this email to start a conversation.</p><p>Together we can build regenerative economies that serve communities and the planet.</p><p>In solidarity,<br/>The Cosmolocal Foundation Team</p>\"\n}",
+        "options": {}
+      },
+      "id": "send-engagement-email",
+      "name": "Send Engagement Email (Day 10)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://crm.cosmolocal.world/api/v1/objects/people/{{ $('Extract Contact Fields').item.json.contactId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.TWENTY_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"stage\": \"NURTURE_COMPLETE\"\n}",
+        "options": {
+          "ignore_ssl_issues": false
+        }
+      },
+      "id": "update-crm-stage",
+      "name": "Update CRM — Nurture Complete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300]
+    }
+  ],
+  "connections": {
+    "Webhook — New Contact Created": {
+      "main": [
+        [
+          {
+            "node": "Extract Contact Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Contact Fields": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email (Day 0)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email (Day 0)": {
+      "main": [
+        [
+          {
+            "node": "Wait 3 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 3 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Follow-up Email (Day 3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Follow-up Email (Day 3)": {
+      "main": [
+        [
+          {
+            "node": "Wait 7 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 7 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Engagement Email (Day 10)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Engagement Email (Day 10)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM — Nurture Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "cosmolocal"
+    },
+    {
+      "name": "email"
+    }
+  ],
+  "pinData": {}
+}
