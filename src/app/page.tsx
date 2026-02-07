@@ -34,33 +34,35 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="flex flex-1 flex-col items-center justify-center px-6 py-24 text-center">
-        <blockquote className="text-lg italic text-muted sm:text-xl">
-          &ldquo;What is heavy should be local, and what is light should be global and shared.&rdquo;
-        </blockquote>
-        <h1 className="mt-8 max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-          Bridging cosmic perspective
-          <br />
-          with local action
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          The Cosmolocal Foundation envisions a world where local communities
-          thrive within regenerative economies, connected through global
-          knowledge-sharing and commons-based collaboration.
-        </p>
-        <div className="mt-10 flex gap-4">
-          <a
-            href="#vision"
-            className="rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-light"
-          >
-            Learn More
-          </a>
-          <a
-            href="https://docs.cosmolocal.world"
-            className="rounded-full border border-border px-6 py-2.5 text-sm font-medium transition-colors hover:bg-foreground/5"
-          >
-            Documentation
-          </a>
+      <section className="hero-section relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-28 text-center sm:py-36">
+        <div className="hero-glow" aria-hidden="true" />
+        <div className="hero-grid" aria-hidden="true" />
+        <div className="relative z-10">
+          <blockquote className="text-lg italic text-white/70 sm:text-xl">
+            &ldquo;What is heavy should be local, and what is light should be global and shared.&rdquo;
+          </blockquote>
+          <h1 className="mt-8 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+            Cosmolocal Foundation
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+            Empowering communities to build localized, regenerative economies
+            connected through global knowledge-sharing and commons-based
+            collaboration.
+          </p>
+          <div className="mt-10 flex justify-center gap-4">
+            <a
+              href="#vision"
+              className="rounded-full bg-white px-6 py-2.5 text-sm font-medium text-stone-900 transition-colors hover:bg-white/90"
+            >
+              Learn More
+            </a>
+            <a
+              href="https://docs.cosmolocal.world"
+              className="rounded-full border border-white/25 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
+            >
+              Documentation
+            </a>
+          </div>
         </div>
       </section>
 
