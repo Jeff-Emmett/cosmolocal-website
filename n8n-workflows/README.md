@@ -9,11 +9,10 @@ API keys are passed as **Docker environment variables** in `docker-compose.yml` 
 | Variable | Description | Where to find |
 |----------|-------------|---------------|
 | `TWENTY_API_KEY` | Twenty CRM API key | crm.cosmolocal.world > Settings > API Keys |
-| `RESEND_API_KEY` | Resend email API key | Already set (or `ssh netcup "cat ~/.resend_credentials"`) |
+| `RESEND_API_KEY` | Resend email API key | `ssh netcup "cat ~/.resend_credentials"` |
+| `LISTMONK_CREDENTIALS` | Listmonk `user:pass` | Internal Docker service credentials |
 
-To update keys, edit the `environment:` section of the `n8n-cosmolocal` service in `docker-compose.yml` and redeploy.
-
-The Listmonk credentials are hardcoded for internal Docker network access (no external exposure).
+To set keys, create `/opt/websites/cosmolocal-website/.env` on the server and redeploy.
 
 ## Workflows
 

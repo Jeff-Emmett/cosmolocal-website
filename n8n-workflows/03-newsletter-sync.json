@@ -97,7 +97,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Basic {{ Buffer.from('admin:***REDACTED_LISTMONK_PASS***').toString('base64') }}"
+              "value": "Basic {{ Buffer.from($env.LISTMONK_CREDENTIALS || 'admin:changeme').toString('base64') }}"
             }
           ]
         },
@@ -164,7 +164,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Basic {{ Buffer.from('admin:***REDACTED_LISTMONK_PASS***').toString('base64') }}"
+              "value": "Basic {{ Buffer.from($env.LISTMONK_CREDENTIALS || 'admin:changeme').toString('base64') }}"
             },
             {
               "name": "Content-Type",

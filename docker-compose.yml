@@ -31,7 +31,8 @@ services:
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=${N8N_DB_PASSWORD:-***REDACTED_DB_PASS***}
       - TWENTY_API_KEY=${TWENTY_API_KEY}
-      - RESEND_API_KEY=${RESEND_API_KEY:-***REDACTED_RESEND_KEY***}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - LISTMONK_CREDENTIALS=${LISTMONK_CREDENTIALS}
     volumes:
       - n8n-cosmolocal-data:/home/node/.n8n
     labels:
