@@ -9,8 +9,11 @@ API keys are passed as **Docker environment variables** in `docker-compose.yml` 
 | Variable | Description | Where to find |
 |----------|-------------|---------------|
 | `TWENTY_API_KEY` | Twenty CRM API key | crm.cosmolocal.world > Settings > API Keys |
-| `RESEND_API_KEY` | Resend email API key | `ssh netcup "cat ~/.resend_credentials"` |
+| `SMTP_USER` | Mailcow SMTP username | e.g. `***REDACTED_EMAIL***` |
+| `SMTP_PASS` | Mailcow SMTP password | Mailcow admin panel at ***REDACTED_SMTP_HOST*** |
 | `LISTMONK_CREDENTIALS` | Listmonk `user:pass` | Internal Docker service credentials |
+
+Email is sent via **Mailcow SMTP** (`***REDACTED_SMTP_HOST***:587` STARTTLS). After importing workflows, create an SMTP credential in n8n named "Mailcow SMTP" with the host/user/pass above.
 
 To set keys, create `/opt/websites/cosmolocal-website/.env` on the server and redeploy.
 

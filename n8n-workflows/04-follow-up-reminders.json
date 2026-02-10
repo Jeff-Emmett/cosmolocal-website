@@ -101,7 +101,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\nconst contactList = items.map(item => \n  `- **${item.json.fullName}** (${item.json.email}) — ${item.json.daysSinceUpdate} days since last update`\n).join('\\n');\n\nconst count = items.length;\n\nreturn [{\n  json: {\n    subject: `[Cosmolocal CRM] ${count} contact${count !== 1 ? 's' : ''} need${count === 1 ? 's' : ''} follow-up`,\n    htmlBody: `<h2>Stale Contact Report</h2><p>The following ${count} contact${count !== 1 ? 's have' : ' has'} not been updated in 14+ days:</p><table style=\"border-collapse:collapse;width:100%\"><tr style=\"background:#f5f5f4\"><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Name</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Email</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Days Stale</th></tr>${items.map(i => `<tr><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.fullName}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.email}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.daysSinceUpdate}</td></tr>`).join('')}</table><p style=\"margin-top:16px\"><a href=\"https://crm.cosmolocal.world\">Open CRM</a> to follow up.</p><p style=\"color:#78716c;font-size:12px\">Automated by n8n — automate.cosmolocal.world</p>`,\n    count\n  }\n}];"
+        "jsCode": "const items = $input.all();\nconst count = items.length;\n\nconst tableRows = items.map(i => `<tr><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.fullName}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.email}</td><td style=\"padding:8px;border:1px solid #e7e5e4\">${i.json.daysSinceUpdate}</td></tr>`).join('');\n\nreturn [{\n  json: {\n    subject: `[Cosmolocal CRM] ${count} contact${count !== 1 ? 's' : ''} need${count === 1 ? 's' : ''} follow-up`,\n    htmlBody: `<h2>Stale Contact Report</h2><p>The following ${count} contact${count !== 1 ? 's have' : ' has'} not been updated in 14+ days:</p><table style=\"border-collapse:collapse;width:100%\"><tr style=\"background:#f5f5f4\"><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Name</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Email</th><th style=\"padding:8px;text-align:left;border:1px solid #e7e5e4\">Days Stale</th></tr>${tableRows}</table><p style=\"margin-top:16px\"><a href=\"https://crm.cosmolocal.world\">Open CRM</a> to follow up.</p><p style=\"color:#78716c;font-size:12px\">Automated by n8n — automate.cosmolocal.world</p>`,\n    count\n  }\n}];"
       },
       "id": "build-report",
       "name": "Build Report Email",
@@ -111,31 +111,24 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.resend.com/emails",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ $env.RESEND_API_KEY }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"from\": \"CRM Bot <automate@cosmolocal.world>\",\n  \"to\": [\"***REDACTED_EMAIL***\"],\n  \"subject\": \"{{ $json.subject }}\",\n  \"html\": \"{{ $json.htmlBody }}\"\n}",
+        "fromEmail": "={{ $env.N8N_SMTP_SENDER }}",
+        "toEmail": "***REDACTED_EMAIL***",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "html": "={{ $json.htmlBody }}",
         "options": {}
       },
       "id": "send-reminder-email",
       "name": "Send Reminder to Team",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1560, 240]
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1560, 240],
+      "credentials": {
+        "smtp": {
+          "id": "mailcow-smtp",
+          "name": "Mailcow SMTP"
+        }
+      }
     },
     {
       "parameters": {},
