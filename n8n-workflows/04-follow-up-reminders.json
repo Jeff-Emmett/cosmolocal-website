@@ -112,7 +112,7 @@
     {
       "parameters": {
         "fromEmail": "={{ $env.N8N_SMTP_SENDER }}",
-        "toEmail": "***REDACTED_EMAIL***",
+        "toEmail": "={{ $env.N8N_SMTP_SENDER }}",
         "subject": "={{ $json.subject }}",
         "emailType": "html",
         "html": "={{ $json.htmlBody }}",

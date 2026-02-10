@@ -36,7 +36,7 @@ Set up CosmoLocal World infrastructure: Mailcow SMTP for cosmolocal.world, Docmo
 ### Mailcow (cosmolocal.world)
 - Mailbox: noreply@cosmolocal.world
 - Alias: newsletter@cosmolocal.world → noreply@cosmolocal.world (sender_allowed=1)
-- SMTP: ***REDACTED_SMTP_HOST***:465 (TLS)
+- SMTP: [SMTP_HOST]:465 (TLS)
 - DNS: SPF, DKIM (2048-bit), DMARC all configured on Cloudflare
 - Google Postmaster Tools verified
 

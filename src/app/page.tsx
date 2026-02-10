@@ -455,10 +455,10 @@ export default function Home() {
             communities, and impact-driven investors.
           </p>
           <a
-            href="mailto:***REDACTED_EMAIL***"
+            href="mailto:hello@cosmolocal.world"
             className="mt-6 inline-block rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-light"
           >
-            ***REDACTED_EMAIL***
+            hello@cosmolocal.world
           </a>
         </div>
       </section>
