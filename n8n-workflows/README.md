@@ -6,16 +6,18 @@ Import these JSON files into [automate.cosmolocal.world](https://automate.cosmol
 
 API keys are passed as **Docker environment variables** in `docker-compose.yml` (n8n community edition doesn't support Settings > Variables). The workflows access them via `$env.VARIABLE_NAME`.
 
-| Variable | Description | Where to find |
-|----------|-------------|---------------|
-| `TWENTY_API_KEY` | Twenty CRM API key | crm.cosmolocal.world > Settings > API Keys |
-| `SMTP_USER` | Mailcow SMTP username | e.g. `***REDACTED_EMAIL***` |
-| `SMTP_PASS` | Mailcow SMTP password | Mailcow admin panel at ***REDACTED_SMTP_HOST*** |
-| `LISTMONK_CREDENTIALS` | Listmonk `user:pass` | Internal Docker service credentials |
+| Variable | Description |
+|----------|-------------|
+| `TWENTY_API_KEY` | CRM API key |
+| `SMTP_HOST` | SMTP server hostname |
+| `SMTP_PORT` | SMTP server port |
+| `SMTP_USER` | SMTP username |
+| `SMTP_PASS` | SMTP password |
+| `SMTP_SENDER` | From address for outgoing email |
+| `LISTMONK_CREDENTIALS` | Listmonk `user:pass` |
+| `N8N_DB_PASSWORD` | n8n PostgreSQL password |
 
-Email is sent via **Mailcow SMTP** (`***REDACTED_SMTP_HOST***:587` STARTTLS). After importing workflows, create an SMTP credential in n8n named "Mailcow SMTP" with the host/user/pass above.
-
-To set keys, create `/opt/websites/cosmolocal-website/.env` on the server and redeploy.
+All credentials are stored in `.env` on the server (gitignored). See server admin for values.
 
 ## Workflows
 
@@ -54,7 +56,7 @@ Syncs all CRM contacts with email addresses to Listmonk list #1. Adjust the list
 **Trigger:** Weekly on Monday at 9:00 AM
 **Flow:** Fetch contacts > Filter those not updated in 14+ days > Email report to team
 
-Sends an HTML table report to `***REDACTED_EMAIL***` with stale contacts and a link to the CRM.
+Sends an HTML table report to the team with stale contacts and a link to the CRM.
 
 ### 05 — Webhook Events (Git to CRM)
 **Trigger:** Webhook POST to `/webhook/git-events`
