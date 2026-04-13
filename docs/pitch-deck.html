@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmolocal Foundation — Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --deep: #1a1a2e;
+    --navy: #16213e;
+    --teal: #0f6b5e;
+    --teal-light: #14a085;
+    --gold: #c9a227;
+    --gold-light: #e8c547;
+    --cream: #faf8f0;
+    --warm-gray: #f0ece3;
+    --text: #2c2c2c;
+    --text-light: #5a5a5a;
+    --white: #ffffff;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    line-height: 1.6;
+  }
+
+  /* SLIDE SYSTEM */
+  .slide {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 675px;
+    margin: 0 auto 3rem;
+    padding: 3.5rem 4rem;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  .slide::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-light);
+    letter-spacing: 0.1em;
+  }
+
+  /* DARK SLIDES */
+  .slide--dark {
+    background: linear-gradient(135deg, var(--deep) 0%, var(--navy) 100%);
+    color: var(--cream);
+  }
+  .slide--dark .slide-number { color: rgba(255,255,255,0.4); }
+  .slide--dark::after {
+    background: linear-gradient(90deg, var(--gold), var(--teal-light));
+  }
+
+  /* TEAL ACCENT SLIDES */
+  .slide--teal {
+    background: linear-gradient(135deg, #0a4f44 0%, var(--teal) 100%);
+    color: var(--cream);
+  }
+  .slide--teal .slide-number { color: rgba(255,255,255,0.4); }
+
+  /* TYPOGRAPHY */
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 700px;
+  }
+
+  .slide--dark .subtitle { color: rgba(250,248,240,0.8); }
+
+  blockquote {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.6;
+    padding-left: 1.5rem;
+    border-left: 3px solid var(--gold);
+    margin: 1.5rem 0;
+    color: var(--gold-light);
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .tag--gold { background: var(--gold); color: var(--deep); }
+  .tag--teal { background: var(--teal-light); color: var(--white); }
+  .tag--outline { border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); background: transparent; }
+
+  /* GRID LAYOUTS */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  /* CARDS */
+  .card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: var(--warm-gray);
+  }
+
+  .card--dark {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .card--teal {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .card h3 { margin-bottom: 0.5rem; }
+
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-light);
+  }
+
+  .card--dark p,
+  .card--teal p { color: rgba(250,248,240,0.7); }
+
+  .card--dark h3,
+  .card--teal h3 { color: var(--gold-light); }
+
+  /* ICON CIRCLES */
+  .icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    background: var(--teal);
+    color: var(--white);
+  }
+
+  .slide--dark .icon-circle { background: var(--gold); color: var(--deep); }
+  .slide--teal .icon-circle { background: rgba(255,255,255,0.15); color: var(--gold-light); }
+
+  /* TABLE */
+  .budget-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .budget-table th {
+    text-align: left;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid var(--teal);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+  }
+
+  .budget-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .budget-table tr:last-child td {
+    border-bottom: 2px solid var(--teal);
+    font-weight: 600;
+  }
+
+  .amount { font-variant-numeric: tabular-nums; font-weight: 500; color: var(--teal); }
+
+  /* BIG NUMBER */
+  .big-number {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .big-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(250,248,240,0.5);
+  }
+
+  /* TEAM */
+  .team-member {
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .team-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.8rem;
+    color: var(--white);
+    font-weight: 600;
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .team-name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .team-role {
+    font-size: 0.8rem;
+    color: var(--teal);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .team-bio {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  /* PARTNER LOGOS */
+  .partner-row {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+
+  .partner-badge {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(250,248,240,0.8);
+  }
+
+  /* BULLET LISTS */
+  .check-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .check-list li {
+    padding: 0.4rem 0 0.4rem 1.8rem;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .check-list li::before {
+    content: '\2713';
+    position: absolute;
+    left: 0;
+    color: var(--teal);
+    font-weight: 700;
+  }
+
+  .slide--dark .check-list li::before { color: var(--gold-light); }
+
+  /* CTA */
+  .cta-box {
+    margin-top: 2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    color: var(--white);
+    text-align: center;
+  }
+
+  .cta-box a {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; }
+    .slide {
+      box-shadow: none;
+      margin: 0;
+      border-radius: 0;
+      min-height: 100vh;
+      page-break-inside: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="slide slide--dark">
+  <span class="slide-number">01 / 07</span>
+  <div>
+    <span class="tag tag--gold">Founding Philanthropic Round</span>
+    <h1 style="font-size: 3.2rem; margin-bottom: 1.5rem;">The Cosmolocal<br>Foundation</h1>
+    <p class="subtitle" style="max-width: 600px;">
+      Building coordination infrastructure for regenerative, commons-based local economies — connected globally.
+    </p>
+    <blockquote style="margin-top: 2rem;">
+      "What is heavy should be local, and what is light should be global and shared."
+    </blockquote>
+    <p style="margin-top: 2.5rem; font-size: 0.85rem; color: rgba(250,248,240,0.5);">
+      The operational wing of the P2P Foundation &nbsp;|&nbsp; cosmolocal.world
+    </p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: THE PROBLEM ==================== -->
+<div class="slide">
+  <span class="slide-number">02 / 07</span>
+  <div>
+    <span class="tag tag--teal">The Challenge</span>
+    <h2>Regenerative communities are everywhere.<br>But they are isolated.</h2>
+    <div class="grid-2" style="margin-top: 2rem;">
+      <div>
+        <h3 style="color: var(--teal);">On the ground</h3>
+        <p style="font-size: 0.95rem; line-height: 1.7;">
+          Eco-villages, transition towns, cooperative networks, community land trusts, regenerative farms, and mutual aid networks are building real alternatives to extractive economics — in every bioregion on earth.
+        </p>
+        <p style="font-size: 0.95rem; line-height: 1.7; margin-top: 1rem;">
+          But they remain <strong>fragmented, underfunded, and disconnected</strong> from one another. Each reinvents the wheel. Each struggles alone for funding. The whole is far less than the sum of its parts.
+        </p>
+      </div>
+      <div>
+        <h3 style="color: var(--teal);">In the funding landscape</h3>
+        <p style="font-size: 0.95rem; line-height: 1.7;">
+          Values-aligned philanthropists and angel funders want to support systemic transformation — but find few credible vehicles at the right level of abstraction.
+        </p>
+        <ul class="check-list" style="margin-top: 1rem;">
+          <li>Project-level grants create dependency</li>
+          <li>Market-rate impact investments demand extractive returns</li>
+          <li>Traditional nonprofits absorb overhead</li>
+          <li><strong>Commons infrastructure</strong> — the shared coordination layer — barely exists</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: WHAT WE DO ==================== -->
+<div class="slide slide--dark">
+  <span class="slide-number">03 / 07</span>
+  <div>
+    <span class="tag tag--outline">Our Approach</span>
+    <h2 style="color: var(--cream);">Four Pillars of Cosmolocal Infrastructure</h2>
+    <p class="subtitle" style="margin-bottom: 1.5rem;">
+      Physical production stays local. Knowledge and coordination tools are shared globally as a commons.
+    </p>
+    <div class="grid-4">
+      <div class="card card--dark">
+        <div class="icon-circle">&#9670;</div>
+        <h3>Open Knowledge Commons</h3>
+        <p>Curated global repository of regenerative methods, governance models, and circular economy blueprints from 20 years of P2P Foundation research.</p>
+      </div>
+      <div class="card card--dark">
+        <div class="icon-circle">&#9673;</div>
+        <h3>Cosmolocal Coordination</h3>
+        <p>Global network connecting locally rooted projects — mycelial infrastructure that helps communities learn from each other across bioregions.</p>
+      </div>
+      <div class="card card--dark">
+        <div class="icon-circle">&#9651;</div>
+        <h3>Commons-Compatible Finance</h3>
+        <p>The Cosmolocal Financing Facility channels capital through commitment pooling — vouchers backed by real goods and services, not extractive debt.</p>
+      </div>
+      <div class="card card--dark">
+        <div class="icon-circle">&#10022;</div>
+        <h3>Participatory Governance</h3>
+        <p>Transparent, community-led decisions using cooperative traditions and Web3 tools — conviction voting, quadratic funding, DAO coordination.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: WHY TEAL ==================== -->
+<div class="slide">
+  <span class="slide-number">04 / 07</span>
+  <div>
+    <span class="tag tag--teal">Evolutionary Purpose</span>
+    <h2>Built on Teal Principles</h2>
+    <p class="subtitle" style="margin-bottom: 2rem; color: var(--text-light);">
+      This is not a traditional nonprofit asking you to fund a fixed program. It is a living system asking you to nourish the soil from which many programs will grow.
+    </p>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="color: var(--teal);">Self-Management</h3>
+        <p>We build infrastructure for distributed autonomy, not top-down control. The Foundation itself operates as a self-organizing team with distributed authority. Local communities coordinate on their own terms using shared tools.</p>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--teal);">Wholeness</h3>
+        <p>We refuse false separations — between economy and ecology, between local identity and global solidarity, between productive work and care work. We design for whole systems, whole communities, whole people.</p>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--teal);">Evolutionary Purpose</h3>
+        <p>Strategy emerges from sensing what the ecosystem needs, not top-down planning. We launch pilots, measure impact, share findings openly, and let the next phase emerge from what we learn.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: TEAM & NETWORK ==================== -->
+<div class="slide">
+  <span class="slide-number">05 / 07</span>
+  <div>
+    <span class="tag tag--teal">People & Partners</span>
+    <h2>A Lean Team, a Deep Network</h2>
+    <div class="grid-3" style="margin-top: 1rem;">
+      <div class="team-member">
+        <div class="team-avatar">MB</div>
+        <div class="team-name">Michel Bauwens</div>
+        <div class="team-role">Founder</div>
+        <div class="team-bio">Founder of the P2P Foundation. Led the Ghent Commons Transition Plan. Advisor to Ecuador and the Vatican on commons policy. 20 years of research and global network building.</div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar">JE</div>
+        <div class="team-name">Jeff Emmett</div>
+        <div class="team-role">Technology & Operations</div>
+        <div class="team-bio">Infrastructure architect and token engineering practitioner. Maintains the Foundation's self-hosted tech stack and designs the Cosmo-Local Credit protocol. Commons Stack background.</div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar">B</div>
+        <div class="team-name">Bryan</div>
+        <div class="team-role">Editorial & Communications</div>
+        <div class="team-bio">Community communications lead and newsletter editor. Manages publishing, stakeholder engagement, and translating systems thinking into accessible narrative.</div>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; text-align: center;">
+      <h3 style="color: var(--text-light); margin-bottom: 1rem;">Ecosystem Partners</h3>
+      <div class="partner-row">
+        <div class="partner-badge" style="border-color: var(--teal); color: var(--teal);">P2P Foundation</div>
+        <div class="partner-badge" style="border-color: var(--teal); color: var(--teal);">Grassroots Economics</div>
+        <div class="partner-badge" style="border-color: var(--teal); color: var(--teal);">Commons Stack</div>
+        <div class="partner-badge" style="border-color: var(--teal); color: var(--teal);">GAIA Commons Trust</div>
+        <div class="partner-badge" style="border-color: var(--teal); color: var(--teal);">Crypto Commons Gathering</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: THE ASK ==================== -->
+<div class="slide slide--teal">
+  <span class="slide-number">06 / 07</span>
+  <div>
+    <span class="tag tag--outline">The Ask</span>
+    <h2 style="color: var(--cream);">$10,000 / Month</h2>
+    <p class="subtitle" style="margin-bottom: 2rem; color: rgba(250,248,240,0.8);">
+      Funding a lean, self-organizing team to build commons infrastructure for regenerative economies. 6-12 month commitments. Full transparency on every dollar.
+    </p>
+    <div class="grid-4">
+      <div class="card card--teal" style="text-align: center; padding: 1.75rem 1rem;">
+        <div class="big-number">$6K</div>
+        <div class="big-label">Core Team</div>
+        <p style="margin-top: 0.75rem; font-size: 0.82rem;">Stipends for 3-4 members covering ops, tech, comms, community</p>
+      </div>
+      <div class="card card--teal" style="text-align: center; padding: 1.75rem 1rem;">
+        <div class="big-number">$1.5K</div>
+        <div class="big-label">Infrastructure</div>
+        <p style="margin-top: 0.75rem; font-size: 0.82rem;">Self-hosted servers, CRM, automation, email — all open-source</p>
+      </div>
+      <div class="card card--teal" style="text-align: center; padding: 1.75rem 1rem;">
+        <div class="big-number">$1.5K</div>
+        <div class="big-label">Pilot Seeds</div>
+        <p style="margin-top: 0.75rem; font-size: 0.82rem;">Direct grants to partner community demonstration projects</p>
+      </div>
+      <div class="card card--teal" style="text-align: center; padding: 1.75rem 1rem;">
+        <div class="big-number">$1K</div>
+        <div class="big-label">Convenings</div>
+        <p style="margin-top: 0.75rem; font-size: 0.82rem;">In-person gatherings, conferences, partner visits</p>
+      </div>
+    </div>
+    <div style="margin-top: 2.5rem; display: flex; gap: 2rem; justify-content: center;">
+      <div style="text-align: center;">
+        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(250,248,240,0.5);">No executive salaries</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(250,248,240,0.5);">No office overhead</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(250,248,240,0.5);">No consultants</p>
+      </div>
+      <div style="text-align: center;">
+        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(250,248,240,0.5);">100% mission-aligned</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: WHAT YOU GET / CTA ==================== -->
+<div class="slide slide--dark">
+  <span class="slide-number">07 / 07</span>
+  <div>
+    <span class="tag tag--gold">For Funders</span>
+    <h2 style="color: var(--cream);">What Your Support Creates</h2>
+    <div class="grid-2" style="margin-top: 1.5rem;">
+      <div>
+        <h3 style="color: var(--gold-light);">You receive</h3>
+        <ul class="check-list" style="color: var(--cream);">
+          <li style="color: rgba(250,248,240,0.85);">Full financial transparency on every dollar spent</li>
+          <li style="color: rgba(250,248,240,0.85);">Quarterly impact reports with open metrics</li>
+          <li style="color: rgba(250,248,240,0.85);">Optional governance seat in our advisory circle</li>
+          <li style="color: rgba(250,248,240,0.85);">Direct access to the P2P Foundation global network</li>
+          <li style="color: rgba(250,248,240,0.85);">Founding supporter recognition (or anonymity — your choice)</li>
+          <li style="color: rgba(250,248,240,0.85);">Potential tax advantages (consult your advisor)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="color: var(--gold-light);">The world receives</h3>
+        <ul class="check-list" style="color: var(--cream);">
+          <li style="color: rgba(250,248,240,0.85);">A fully operational commons coordination foundation</li>
+          <li style="color: rgba(250,248,240,0.85);">Pilot programs demonstrating cosmolocal economics</li>
+          <li style="color: rgba(250,248,240,0.85);">Open-source tools and published research as global commons</li>
+          <li style="color: rgba(250,248,240,0.85);">Infrastructure connecting regenerative communities worldwide</li>
+          <li style="color: rgba(250,248,240,0.85);">A bridge between global capital and local regeneration</li>
+          <li style="color: rgba(250,248,240,0.85);">The soil from which many future programs grow</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cta-box" style="margin-top: 2.5rem; background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(15,107,94,0.15)); border: 1px solid rgba(201,162,39,0.3);">
+      <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem;">Ready to support the commons transition?</p>
+      <p style="font-size: 0.95rem; color: rgba(250,248,240,0.8);">
+        <a href="mailto:hello@cosmolocal.world">hello@cosmolocal.world</a> &nbsp;&middot;&nbsp;
+        <a href="https://cosmolocal.world">cosmolocal.world</a> &nbsp;&middot;&nbsp;
+        <a href="https://docs.cosmolocal.world">docs.cosmolocal.world</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
